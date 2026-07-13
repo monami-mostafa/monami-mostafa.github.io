@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monami Mostafa — Full Stack Developer</title>
+<meta name="description" content="Monami Mostafa — Full Stack Developer building with React, Django, FastAPI and applied ML/CV.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#0B0F1A;
+    --paper-dim:#141B2C;
+    --ink:#F1F4FF;
+    --ink-soft:#96A2C4;
+    --line:#2A3350;
+    --box:#4FD8FF;
+    --box-dim:#123244;
+    --amber:#FFB13C;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Public Sans', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- utility: annotation frame ---------- */
+  .frame{
+    position:relative;
+    border:1.5px solid var(--line);
+  }
+  .frame::before, .frame::after,
+  .frame .c2::before, .frame .c2::after{
+    content:"";
+    position:absolute;
+    width:14px; height:14px;
+    border:2px solid var(--box);
+  }
+  .frame::before{ top:-2px; left:-2px; border-right:none; border-bottom:none; }
+  .frame::after{ top:-2px; right:-2px; border-left:none; border-bottom:none; }
+  .frame .c2::before{ bottom:-2px; left:-2px; border-right:none; border-top:none; }
+  .frame .c2::after{ bottom:-2px; right:-2px; border-left:none; border-top:none; }
+
+  .tag{
+    position:absolute;
+    top:-13px; left:12px;
+    background:var(--box);
+    color:#08111F;
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    padding:2px 8px;
+    line-height:1.6;
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,15,26,0.85);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    font-family:var(--mono); font-weight:600; font-size:15px;
+    letter-spacing:.02em;
+  }
+  .logo span{color:var(--box);}
+  .navlinks{ display:flex; gap:28px; list-style:none; }
+  .navlinks a{
+    font-family:var(--mono); font-size:13px; text-decoration:none;
+    color:var(--ink-soft); letter-spacing:.02em;
+    transition:color .15s;
+  }
+  .navlinks a:hover{ color:var(--box); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:96px 0 88px;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:13px; color:var(--box);
+    letter-spacing:.06em; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{
+    content:""; width:8px; height:8px; background:var(--box); display:inline-block;
+    animation:blink 1.6s infinite;
+  }
+  @keyframes blink{ 50%{opacity:.25;} }
+
+  h1{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:clamp(36px, 6vw, 60px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  h1 .last{color:var(--box);}
+
+  .hero-sub{
+    margin-top:20px;
+    max-width:560px;
+    font-size:18px;
+    color:var(--ink-soft);
+  }
+
+  .detect-row{
+    margin-top:40px;
+    display:flex; flex-wrap:wrap; gap:14px;
+  }
+  .detect-box{
+    position:relative;
+    padding:14px 18px 10px;
+    border:1.5px solid var(--line);
+    font-family:var(--mono);
+    font-size:13px;
+  }
+  .detect-box .cls{ font-weight:600; color:var(--ink); }
+  .detect-box .conf{
+    display:block; margin-top:2px; font-size:11px; color:var(--box);
+  }
+  .detect-box::before, .detect-box::after{
+    content:""; position:absolute; width:10px; height:10px; border:2px solid var(--box);
+  }
+  .detect-box::before{ top:-2px; left:-2px; border-right:none; border-bottom:none;}
+  .detect-box::after{ bottom:-2px; right:-2px; border-left:none; border-top:none;}
+
+  .hero-links{
+    margin-top:44px;
+    display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    text-decoration:none;
+    padding:12px 22px;
+    border:1.5px solid var(--ink);
+    display:inline-block;
+    transition:background .15s, color .15s;
+  }
+  .btn.primary{ background:var(--ink); color:var(--paper); }
+  .btn.primary:hover{ background:var(--box); border-color:var(--box); }
+  .btn.ghost:hover{ background:var(--ink); color:var(--paper); }
+
+  /* ---------- section shell ---------- */
+  section{ padding:72px 0; border-top:1px solid var(--line); }
+  .sec-head{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:40px;
+  }
+  .sec-num{ font-family:var(--mono); color:var(--amber); font-size:13px; }
+  .sec-title{
+    font-family:var(--mono); font-weight:700; font-size:24px; letter-spacing:-0.01em;
+  }
+
+  /* ---------- about ---------- */
+  .about-grid{
+    display:grid; grid-template-columns:1.3fr 1fr; gap:48px;
+  }
+  .about-text p{ color:var(--ink-soft); margin-bottom:16px; font-size:16px;}
+  .about-text strong{ color:var(--ink); }
+
+  .fact-list{ list-style:none; font-family:var(--mono); font-size:13px; }
+  .fact-list li{
+    display:flex; justify-content:space-between;
+    padding:10px 0; border-bottom:1px dashed var(--line);
+    gap:12px;
+  }
+  .fact-list li span:first-child{ color:var(--ink-soft); }
+  .fact-list li span:last-child{ text-align:right; font-weight:600; }
+
+  /* ---------- skills ---------- */
+  .skill-group{ margin-bottom:26px; }
+  .skill-group h3{
+    font-family:var(--mono); font-size:12px; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--ink-soft); margin-bottom:12px;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:var(--mono); font-size:13px;
+    padding:7px 12px;
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+  }
+
+  /* ---------- projects ---------- */
+  .project{
+    position:relative;
+    margin-bottom:60px;
+    padding:26px 26px 26px;
+  }
+  .project-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    flex-wrap:wrap; gap:10px;
+    margin-bottom:12px;
+  }
+  .project-title{ font-family:var(--mono); font-weight:700; font-size:19px; }
+  .project-role{ font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .conf-badge{
+    font-family:var(--mono); font-size:11px; font-weight:600;
+    color:var(--amber); background:rgba(255,177,60,0.12);
+    border:1px solid rgba(255,177,60,0.35);
+    padding:4px 9px; white-space:nowrap; height:fit-content;
+  }
+  .project ul{ margin:14px 0 16px 18px; color:var(--ink-soft); font-size:15px; }
+  .project ul li{ margin-bottom:6px; }
+  .project-tags{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+  .project-tags span{
+    font-family:var(--mono); font-size:11px;
+    border:1px solid var(--line); padding:4px 9px; color:var(--ink-soft);
+  }
+  .project-links{ display:flex; gap:16px; }
+  .project-links a{
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    text-decoration:none; color:var(--box);
+    border-bottom:1.5px solid var(--box);
+  }
+
+  /* ---------- research/experience ---------- */
+  .timeline{ list-style:none; }
+  .timeline li{
+    display:grid; grid-template-columns:150px 1fr; gap:24px;
+    padding:22px 0; border-bottom:1px solid var(--line);
+  }
+  .timeline li:last-child{ border-bottom:none; }
+  .t-period{ font-family:var(--mono); font-size:12px; color:var(--box); padding-top:2px;}
+  .t-role{ font-weight:700; font-size:16px; margin-bottom:4px;}
+  .t-org{ font-size:13px; color:var(--ink-soft); margin-bottom:8px; font-family:var(--mono);}
+  .t-desc{ color:var(--ink-soft); font-size:15px; }
+
+  /* ---------- contact ---------- */
+  .contact-wrap{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:32px;
+  }
+  .contact-big{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(26px,4.5vw,40px);
+    max-width:520px; line-height:1.15;
+  }
+  .contact-big a{ color:var(--amber); text-decoration:none; border-bottom:2px solid var(--amber);}
+  .contact-list{ list-style:none; font-family:var(--mono); font-size:14px; text-align:right; }
+  .contact-list li{ margin-bottom:10px; }
+  .contact-list a{ text-decoration:none; }
+  .contact-list a:hover{ color:var(--box); }
+
+  footer{
+    padding:28px 0 40px; text-align:center;
+    font-family:var(--mono); font-size:12px; color:var(--ink-soft);
+  }
+
+  @media (max-width:720px){
+    .about-grid{ grid-template-columns:1fr; }
+    .navlinks{ display:none; }
+    .timeline li{ grid-template-columns:1fr; gap:6px; }
+    .contact-wrap{ flex-direction:column; align-items:flex-start; }
+    .contact-list{ text-align:left; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow::before{ animation:none; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="logo">MONAMI<span>.</span>DEV</div>
+      <ul class="navlinks">
+        <li><a href="#about">about</a></li>
+        <li><a href="#skills">skills</a></li>
+        <li><a href="#projects">projects</a></li>
+        <li><a href="#experience">research</a></li>
+        <li><a href="#contact">contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="hero" style="border-top:none; padding-top:56px;">
+      <div class="eyebrow">AVAILABLE FOR FULL-TIME / INTERNSHIP ROLES</div>
+      <h1>Monami<br>Most<span class="last">afa</span></h1>
+      <p class="hero-sub">
+        Full stack developer building end-to-end web applications with the
+        MERN stack, Django, and MySQL — with applied research in machine
+        learning and computer vision on the side.
+      </p>
+
+      <div class="detect-row">
+        <div class="detect-box"><span class="cls">full-stack developer</span><span class="conf">confidence 0.97</span></div>
+        <div class="detect-box"><span class="cls">react / node / django</span><span class="conf">confidence 0.94</span></div>
+        <div class="detect-box"><span class="cls">applied ml &amp; cv</span><span class="conf">confidence 0.88</span></div>
+      </div>
+
+      <div class="hero-links">
+        <a class="btn primary" href="#projects">View projects</a>
+        <a class="btn ghost" href="https://github.com/monami-mostafa" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn ghost" href="mailto:monamimostafa03@gmail.com">Email me</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <span class="sec-title">About</span>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I'm a <strong>Computer Science &amp; Engineering</strong> student at
+            BRAC University and a full stack developer with hands-on experience
+            building production-style web applications — from REST API design
+            and database schema modeling to responsive front-end interfaces.
+          </p>
+          <p>
+            Alongside development work, I contribute to
+            <strong>computer vision research</strong> at BRAC University's CVIS
+            lab and completed an undergraduate thesis applying 3D CNNs and
+            Vision Transformers to medical image classification.
+          </p>
+          <p>
+            I'm comfortable working across the stack, managing Git workflows,
+            and collaborating in team-based development environments — and I'm
+            currently expanding into <strong>FastAPI, TypeScript, and
+            LLM-powered application development</strong>.
+          </p>
+        </div>
+        <ul class="fact-list">
+          <li><span>Based in</span><span>Dhaka, Bangladesh</span></li>
+          <li><span>Education</span><span>BRAC University, CSE</span></li>
+          <li><span>Grad year</span><span>2026</span></li>
+          <li><span>Focus</span><span>Full Stack + Applied ML</span></li>
+          <li><span>Languages</span><span>English, Bangla</span></li>
+          <li><span>GitHub</span><span>@monami-mostafa</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="sec-head">
+        <span class="sec-num">02</span>
+        <span class="sec-title">Skills</span>
+      </div>
+
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <div class="chips">
+          <span class="chip">JavaScript</span>
+          <span class="chip">Python</span>
+          <span class="chip">C / C++</span>
+          <span class="chip">SQL</span>
+          <span class="chip">HTML / CSS</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3>Frameworks &amp; Libraries</h3>
+        <div class="chips">
+          <span class="chip">React.js</span>
+          <span class="chip">Node.js</span>
+          <span class="chip">Express.js</span>
+          <span class="chip">Django</span>
+          <span class="chip">MERN Stack</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3>Databases</h3>
+        <div class="chips">
+          <span class="chip">MySQL</span>
+          <span class="chip">MongoDB</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3>Tools &amp; Platforms</h3>
+        <div class="chips">
+          <span class="chip">Git / GitHub</span>
+          <span class="chip">REST APIs</span>
+          <span class="chip">Postman</span>
+          <span class="chip">VS Code</span>
+          <span class="chip">Google Colab</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <h3>Other</h3>
+        <div class="chips">
+          <span class="chip">Machine Learning</span>
+          <span class="chip">Computer Vision</span>
+          <span class="chip">Data Analysis</span>
+          <span class="chip">Agile Collaboration</span>
+          <span class="chip">Excel / PowerPoint</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="sec-head">
+        <span class="sec-num">03</span>
+        <span class="sec-title">Projects</span>
+      </div>
+
+      <div class="project frame">
+        <div class="c2"></div>
+        <span class="tag">detected: e-commerce</span>
+        <div class="project-head">
+          <div>
+            <div class="project-title">Bazar Koro — E-Commerce Platform</div>
+            <div class="project-role">Team Lead · 4-member team · Academic Project</div>
+          </div>
+          <span class="conf-badge">flagship project</span>
+        </div>
+        <ul>
+          <li>Engineered a full-stack e-commerce web application using the MERN stack, streamlining digital retail operations, product listings, and order workflows.</li>
+          <li>Designed and implemented RESTful APIs and MongoDB schemas to support product listing, order management, and user workflows.</li>
+          <li>Led a team of four through planning, development, and delivery within academic deadlines; selected for a Project Showcase Competition for innovation and implementation quality.</li>
+        </ul>
+        <div class="project-tags">
+          <span>React.js</span><span>Node.js</span><span>Express.js</span><span>MongoDB</span><span>REST API</span>
+        </div>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">Code →</a>
+          <a href="#" target="_blank" rel="noopener">Live Demo →</a>
+        </div>
+      </div>
+
+      <div class="project frame">
+        <div class="c2"></div>
+        <span class="tag">detected: ride-sharing</span>
+        <div class="project-head">
+          <div>
+            <div class="project-title">WheelPick — Ride-Sharing Platform</div>
+            <div class="project-role">Academic Project</div>
+          </div>
+        </div>
+        <ul>
+          <li>Built a dynamic ride-sharing web application replicating core platform mechanics, including driver–rider matching logic and real-time tracking architecture.</li>
+          <li>Developed front-end and back-end components using the MERN stack with RESTful API integration.</li>
+        </ul>
+        <div class="project-tags">
+          <span>React.js</span><span>Node.js</span><span>Express.js</span><span>MongoDB</span>
+        </div>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">Code →</a>
+        </div>
+      </div>
+
+      <div class="project frame">
+        <div class="c2"></div>
+        <span class="tag">detected: booking system</span>
+        <div class="project-head">
+          <div>
+            <div class="project-title">Bus Ticketing System</div>
+            <div class="project-role">Academic Project</div>
+          </div>
+        </div>
+        <ul>
+          <li>Engineered an online, real-time ticketing platform using Django and MySQL to handle digital ticket sales, route configuration, seat reservations, and fleet management.</li>
+          <li>Designed relational database schema and implemented server-side logic for booking and inventory management.</li>
+        </ul>
+        <div class="project-tags">
+          <span>Django</span><span>MySQL</span><span>Python</span>
+        </div>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">Code →</a>
+        </div>
+      </div>
+
+      <div class="project frame">
+        <div class="c2"></div>
+        <span class="tag">detected: ml / research</span>
+        <div class="project-head">
+          <div>
+            <div class="project-title">Machine Learning &amp; AI Projects</div>
+            <div class="project-role">Academic Projects</div>
+          </div>
+        </div>
+        <ul>
+          <li>Fusion+ Disaster Damage Classification — deep learning model for classifying disaster damage from imagery.</li>
+          <li>Fake News Detection (NLP) — text classification pipeline for identifying misinformation.</li>
+          <li>Stock Price Prediction — time-series model applied to historical market data.</li>
+          <li>Music Genre Classification — audio feature-based classification model.</li>
+        </ul>
+        <div class="project-tags">
+          <span>Python</span><span>Machine Learning</span><span>Deep Learning</span><span>NLP</span>
+        </div>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">Code →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEARCH / EXPERIENCE -->
+    <section id="experience">
+      <div class="sec-head">
+        <span class="sec-num">04</span>
+        <span class="sec-title">Research &amp; Experience</span>
+      </div>
+      <ul class="timeline">
+        <li>
+          <div class="t-period">Ongoing</div>
+          <div>
+            <div class="t-role">Content Writer</div>
+            <div class="t-org">Computer Vision Research Lab (CVIS), BRAC University</div>
+            <div class="t-desc">Contribute to research communication and content development for computer vision research initiatives.</div>
+          </div>
+        </li>
+        <li>
+          <div class="t-period">Undergrad Thesis</div>
+          <div>
+            <div class="t-role">Deep Learning for Lung Cancer Diagnosis: 3D CNN Approach</div>
+            <div class="t-org">BRAC University</div>
+            <div class="t-desc">Developed and evaluated 3D CNN and Vision Transformer models in Python for automated medical image classification, including data preprocessing and model optimization pipelines.</div>
+          </div>
+        </li>
+        <li>
+          <div class="t-period">2022 – 2026</div>
+          <div>
+            <div class="t-role">B.Sc. in Computer Science and Engineering</div>
+            <div class="t-org">BRAC University </div>
+            <div class="t-desc">Selected for the Project Showcase Competition for the Bazar Koro e-commerce platform. Active contributor to computer vision research initiatives.</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="sec-head">
+        <span class="sec-num">05</span>
+        <span class="sec-title">Contact</span>
+      </div>
+      <div class="contact-wrap">
+        <div class="contact-big">
+          Open to full-stack &amp; AI-focused roles.
+          <a href="mailto:monamimostafa03@gmail.com">Let's talk →</a>
+        </div>
+        <ul class="contact-list">
+          <li><a href="mailto:monamimostafa03@gmail.com">monamimostafa03@gmail.com</a></li>
+          <li><a href="tel:+8801301705508">+880 1301 705508</a></li>
+          <li><a href="https://github.com/monami-mostafa" target="_blank" rel="noopener">github.com/monami-mostafa</a></li>
+          <li>Dhaka, Bangladesh</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  Designed &amp; built by Monami Mostafa · <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(link=>{
+    link.addEventListener('click', e=>{
+      const target = document.querySelector(link.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
