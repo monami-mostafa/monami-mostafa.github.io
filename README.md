@@ -2,7 +2,7 @@
 
 Welcome to my personal developer portfolio! 👋
 
-I am **Monami Mostafa**, a Computer Science and Engineering student at **BRAC University** and a **Full Stack Developer** with an interest in **Machine Learning, Artificial Intelligence, and Computer Vision**.
+I am **Monami Mostafa**, a Computer Science and Engineering Graduate at **BRAC University** and a **Full Stack Developer** with an interest in **Machine Learning, Artificial Intelligence, and Computer Vision**.
 
 This portfolio showcases my technical skills, projects, research experience, and academic journey.
 
